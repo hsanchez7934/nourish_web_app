@@ -9,6 +9,7 @@ frontend:
   phases:
     build:
       commands:
+        - env | grep -E '^(FOOD_DATABASE_|NUTRITION_DATA_)' >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
