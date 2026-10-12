@@ -1,8 +1,15 @@
 'use client'
 
-import {useEffect, useSyncExternalStore} from 'react'
+import {useSyncExternalStore} from 'react'
 import {motion} from 'framer-motion'
-import {applyTheme, getStoredTheme, setStoredTheme, type Theme} from '@/lib/theme'
+import {
+	applyTheme,
+	getStoredTheme,
+	notifyTheme,
+	setStoredTheme,
+	subscribeTheme,
+	type Theme
+} from '@/lib/theme'
 import {layoutTransition} from '@/lib/motion'
 
 const options: {value: Theme; label: string}[] = [
@@ -11,35 +18,13 @@ const options: {value: Theme; label: string}[] = [
 	{value: 'system', label: 'System'}
 ]
 
-const listeners = new Set<() => void>()
-
-function subscribe(listener: () => void) {
-	listeners.add(listener)
-	return () => listeners.delete(listener)
-}
-
-function notify() {
-	listeners.forEach((listener) => listener())
-}
-
 export default function ThemeControl() {
-	const theme = useSyncExternalStore(subscribe, getStoredTheme, () => 'system' as const)
-
-	useEffect(() => {
-		applyTheme(theme)
-
-		if (theme !== 'system') return
-
-		const media = window.matchMedia('(prefers-color-scheme: dark)')
-		const onChange = () => applyTheme('system')
-		media.addEventListener('change', onChange)
-		return () => media.removeEventListener('change', onChange)
-	}, [theme])
+	const theme = useSyncExternalStore(subscribeTheme, getStoredTheme, () => 'system' as const)
 
 	function selectTheme(nextTheme: Theme) {
 		setStoredTheme(nextTheme)
 		applyTheme(nextTheme)
-		notify()
+		notifyTheme()
 	}
 
 	return (

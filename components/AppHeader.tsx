@@ -2,7 +2,7 @@
 
 import {motion} from 'framer-motion'
 import MobileNav from '@/components/MobileNav'
-import ThemeControl from '@/components/ThemeControl'
+import UserMenu from '@/components/UserMenu'
 import {fadeTransition} from '@/lib/motion'
 
 export default function AppHeader() {
@@ -19,7 +19,7 @@ export default function AppHeader() {
 					Nourish
 				</span>
 			</div>
-			<ThemeControl />
+			<UserMenu />
 		</motion.header>
 	)
 }

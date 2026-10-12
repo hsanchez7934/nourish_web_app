@@ -62,5 +62,5 @@ export function toFoodSearchResults(data: FoodsParserResponse): FoodSearchResult
 		}
 	}
 
-	return [...resultsByKey.values()]
+	return Array.from(resultsByKey.values())
 }

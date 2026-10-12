@@ -19,6 +19,17 @@ export function setStoredTheme(theme: Theme) {
 	localStorage.setItem(THEME_STORAGE_KEY, theme)
 }
 
+const themeListeners = new Set<() => void>()
+
+export function subscribeTheme(listener: () => void) {
+	themeListeners.add(listener)
+	return () => themeListeners.delete(listener)
+}
+
+export function notifyTheme() {
+	themeListeners.forEach((listener) => listener())
+}
+
 export function applyTheme(theme: Theme) {
 	const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 	const isDark = theme === 'dark' || (theme === 'system' && systemDark)

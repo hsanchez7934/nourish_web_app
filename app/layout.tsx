@@ -4,6 +4,7 @@ import Script from 'next/script'
 import AppHeader from '@/components/AppHeader'
 import AppNav from '@/components/AppNav'
 import MotionProvider from '@/components/MotionProvider'
+import ThemeSync from '@/components/ThemeSync'
 import {navInitScript} from '@/lib/nav'
 import {themeInitScript} from '@/lib/theme'
 import './globals.css'
@@ -28,6 +29,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 					{navInitScript}
 				</Script>
 				<MotionProvider>
+					<ThemeSync />
 					<AppHeader />
 					<AppNav />
 					<div className="app-shell min-h-screen">{children}</div>

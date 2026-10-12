@@ -2,7 +2,10 @@
 
 import axios from 'axios'
 
-export default async function autoCompleteIngredients(query: string, signal?: AbortSignal): Promise<string[]> {
+export default async function autoCompleteIngredients(
+	query: string,
+	signal?: AbortSignal
+): Promise<string[]> {
 	const response = await axios.get<unknown>(`https://api.edamam.com/auto-complete`, {
 		params: {
 			q: query,
@@ -11,5 +14,7 @@ export default async function autoCompleteIngredients(query: string, signal?: Ab
 		},
 		signal
 	})
-	return response.data
+
+	if (!Array.isArray(response.data)) return []
+	return response.data.filter((item): item is string => typeof item === 'string')
 }
