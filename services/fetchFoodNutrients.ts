@@ -5,25 +5,27 @@ import axios from 'axios'
 
 export default async function fetchFoodNutrients(
 	foodId: string,
-	quantity: number = 1,
-	measureURI: string
-): Promise<any> {
-	const response = await axios.post(
+	quantity = 100,
+	measureURI: string,
+	signal?: AbortSignal
+) {
+	const response = await axios.post<unknown>(
 		`https://api.edamam.com/api/food-database/v2/nutrients`,
 		{
 			ingredients: [
 				{
 					quantity,
 					measureURI,
-					foodId,
-				},
-			],
+					foodId
+				}
+			]
 		},
 		{
 			params: {
-				app_id: process.env.EXPO_PUBLIC_FOOD_DATABASE_APP_ID,
-				app_key: process.env.EXPO_PUBLIC_FOOD_DATABASE_API_KEY,
+				app_id: process.env.FOOD_DATABASE_APP_ID,
+				app_key: process.env.FOOD_DATABASE_API_KEY
 			},
+			signal
 		}
 	)
 	return response.data

@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+build
+coverage
+package-lock.json
+.amplify
+amplify_outputs*
+amplifyconfiguration*
+next-env.d.ts

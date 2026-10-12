@@ -1,52 +1,25 @@
-"use client";
+import Link from 'next/link'
+import {PiMagnifyingGlass} from 'react-icons/pi'
 
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-import "./../app/app.css";
-import { Amplify } from "aws-amplify";
-import outputs from "@/amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
-
-Amplify.configure(outputs);
-
-const client = generateClient<Schema>();
-
-export default function App() {
-  // const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  // function listTodos() {
-  //   client.models.Todo.observeQuery().subscribe({
-  //     next: (data) => setTodos([...data.items]),
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   listTodos();
-  // }, []);
-
-  // function createTodo() {
-  //   client.models.Todo.create({
-  //     content: window.prompt("Todo content"),
-  //   });
-  // }
-
-  return (
-    <main>
-      <h1>Nourish Web App</h1>
-      {/* <button onClick={createTodo}>+ new</button> */}
-      {/* <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul> */}
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
-          Review next steps of this tutorial.
-        </a>
-      </div>
-    </main>
-  );
+export default function HomePage() {
+	return (
+		<main className="min-h-screen bg-stone-50 px-4 pb-16 pt-24 dark:bg-stone-950 lg:px-8">
+			<div className="mx-auto flex w-full max-w-xl flex-col items-start pt-6">
+				<p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">Nourish</p>
+				<h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">
+					Home
+				</h1>
+				<p className="mt-3 text-base leading-relaxed text-stone-600 dark:text-stone-400">
+					Look up a food to see its calories and nutrients. A fuller home view is coming later.
+				</p>
+				<Link
+					href="/food-search"
+					className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+				>
+					<PiMagnifyingGlass aria-hidden="true" className="h-5 w-5" />
+					Search foods
+				</Link>
+			</div>
+		</main>
+	)
 }
