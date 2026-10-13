@@ -106,6 +106,24 @@ function toRow(
 	}
 }
 
+export function toNutritionSections(
+	nutrients: Record<string, NutrientAmount> | undefined,
+	daily: Record<string, NutrientAmount> | undefined
+) {
+	const mainRows: NutritionRow[] = []
+	const microRows: NutritionRow[] = []
+	if (!nutrients) return {mainRows, microRows}
+
+	for (const field of NUTRIENT_ROWS) {
+		const row = toRow(nutrients, daily, field)
+		if (!row) continue
+		if (field.section === 'main') mainRows.push(row)
+		else microRows.push(row)
+	}
+
+	return {mainRows, microRows}
+}
+
 export function edamamFoodImage(value: string) {
 	try {
 		const url = new URL(value)
@@ -126,15 +144,7 @@ export function toFoodNutrientDetails(data: unknown, foodId: string): FoodNutrie
 	if (!nutrients) return null
 
 	const calories = nutrients.ENERC_KCAL
-	const mainRows: NutritionRow[] = []
-	const microRows: NutritionRow[] = []
-
-	for (const field of NUTRIENT_ROWS) {
-		const row = toRow(nutrients, response.totalDaily, field)
-		if (!row) continue
-		if (field.section === 'main') mainRows.push(row)
-		else microRows.push(row)
-	}
+	const {mainRows, microRows} = toNutritionSections(nutrients, response.totalDaily)
 
 	return {
 		id: parsed?.foodId?.trim() || foodId,

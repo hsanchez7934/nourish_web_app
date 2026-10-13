@@ -13,6 +13,7 @@ type FoodNutrientsProps = {
 	foodId: string
 	measureURI: string
 	imageUrl: string
+	embedded?: boolean
 }
 
 type LoadStatus = 'loading' | 'error' | 'success'
@@ -21,7 +22,12 @@ function displayName(name: string) {
 	return name.charAt(0).toUpperCase() + name.slice(1)
 }
 
-export default function FoodNutrients({foodId, measureURI, imageUrl}: FoodNutrientsProps) {
+export default function FoodNutrients({
+	foodId,
+	measureURI,
+	imageUrl,
+	embedded = false
+}: FoodNutrientsProps) {
 	const thumbnail = edamamFoodImage(imageUrl)
 	const [status, setStatus] = useState<LoadStatus>('loading')
 	const [food, setFood] = useState<FoodNutrientDetails | null>(null)
@@ -72,15 +78,20 @@ export default function FoodNutrients({foodId, measureURI, imageUrl}: FoodNutrie
 		return () => controller.abort()
 	}, [foodId, measureURI])
 
+	const HeadingTag = embedded ? 'h2' : 'h1'
+	const sectionSpacing = embedded ? 'mt-2' : 'mt-8'
+
 	return (
-		<div className="mx-auto w-full max-w-screen-2xl">
-			<Link
-				href="/food-search"
-				className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-emerald-800 dark:text-stone-400 dark:hover:text-emerald-300"
-			>
-				<PiArrowLeft aria-hidden="true" className="h-4 w-4" />
-				Back to search
-			</Link>
+		<div className={embedded ? 'w-full' : 'mx-auto w-full max-w-screen-2xl'}>
+			{embedded ? null : (
+				<Link
+					href="/food-search"
+					className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-emerald-800 dark:text-stone-400 dark:hover:text-emerald-300"
+				>
+					<PiArrowLeft aria-hidden="true" className="h-4 w-4" />
+					Back to search
+				</Link>
+			)}
 			<AnimatePresence mode="wait">
 				{status === 'loading' ? (
 					<motion.div
@@ -90,7 +101,7 @@ export default function FoodNutrients({foodId, measureURI, imageUrl}: FoodNutrie
 						animate="show"
 						exit="exit"
 						aria-hidden="true"
-						className="mt-8"
+						className={sectionSpacing}
 					>
 						<div className="flex items-center gap-5">
 							<div className="h-24 w-24 shrink-0 animate-pulse rounded-2xl bg-stone-200 motion-reduce:animate-none dark:bg-stone-800" />
@@ -120,7 +131,7 @@ export default function FoodNutrients({foodId, measureURI, imageUrl}: FoodNutrie
 						initial="hidden"
 						animate="show"
 						exit="exit"
-						className="mt-8 text-sm text-stone-600 dark:text-stone-400"
+						className={`${sectionSpacing} text-sm text-stone-600 dark:text-stone-400`}
 					>
 						{message}
 					</motion.p>
@@ -131,7 +142,7 @@ export default function FoodNutrients({foodId, measureURI, imageUrl}: FoodNutrie
 						initial="hidden"
 						animate="show"
 						exit="exit"
-						className="mt-8"
+						className={sectionSpacing}
 					>
 						<div className="flex items-center gap-5">
 							{thumbnail ? (
@@ -145,9 +156,14 @@ export default function FoodNutrients({foodId, measureURI, imageUrl}: FoodNutrie
 								</motion.div>
 							) : null}
 							<div className="min-w-0">
-								<h1 className="text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">
+								<HeadingTag
+									className={[
+										'font-semibold tracking-tight text-stone-900 dark:text-stone-50',
+										embedded ? 'text-2xl' : 'text-3xl'
+									].join(' ')}
+								>
 									{displayName(food.name)}
-								</h1>
+								</HeadingTag>
 							</div>
 						</div>
 						<NutritionFacts food={food} />

@@ -62,12 +62,16 @@ html[data-nav='expanded'] .nav-icon-expanded {
 		padding-left: 15rem;
 	}
 
-	.food-search-frame {
+	.food-search-frame,
+	.nutrition-analysis-frame,
+	.sign-in-frame {
 		left: 4.5rem;
 		transition: left 200ms cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
-	html[data-nav='expanded'] .food-search-frame {
+	html[data-nav='expanded'] .food-search-frame,
+	html[data-nav='expanded'] .nutrition-analysis-frame,
+	html[data-nav='expanded'] .sign-in-frame {
 		left: 15rem;
 	}
 }
@@ -76,6 +80,8 @@ html[data-nav='expanded'] .nav-icon-expanded {
 	.app-nav,
 	.app-shell,
 	.food-search-frame,
+	.nutrition-analysis-frame,
+	.sign-in-frame,
 	.nav-label {
 		transition: none;
 	}

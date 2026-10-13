@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import type {FoodSearchResult} from '@/lib/foodSearch'
 
 type Nutrient = {
@@ -37,22 +36,20 @@ function getNutrients(food: FoodSearchResult): Nutrient[] {
 	return nutrients
 }
 
-function nutrientHref(food: FoodSearchResult) {
-	const params = new URLSearchParams()
-	if (food.gramMeasureUri) params.set('measureURI', food.gramMeasureUri)
-	if (food.imageUrl) params.set('image', food.imageUrl)
-	const query = params.toString()
-	const path = `/food-nutrients/${encodeURIComponent(food.id)}`
-	return query ? `${path}?${query}` : path
-}
-
-export default function FoodCard({food}: {food: FoodSearchResult}) {
+export default function FoodCard({
+	food,
+	onSelect
+}: {
+	food: FoodSearchResult
+	onSelect: (food: FoodSearchResult) => void
+}) {
 	const nutrients = getNutrients(food)
 
 	return (
-		<Link
-			href={nutrientHref(food)}
-			className="flex gap-4 rounded-xl border border-stone-200 bg-white p-3 shadow-sm transition-colors hover:border-emerald-700/40 hover:bg-emerald-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-emerald-400/40 dark:hover:bg-emerald-950/30"
+		<button
+			type="button"
+			onClick={() => onSelect(food)}
+			className="flex w-full cursor-pointer gap-4 rounded-xl border border-stone-200 bg-white p-3 text-left shadow-sm transition-colors hover:border-emerald-700/40 hover:bg-emerald-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-emerald-400/40 dark:hover:bg-emerald-950/30"
 		>
 			<div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-stone-100 dark:bg-stone-800">
 				{food.imageUrl ? (
@@ -89,6 +86,6 @@ export default function FoodCard({food}: {food: FoodSearchResult}) {
 					</div>
 				) : null}
 			</div>
-		</Link>
+		</button>
 	)
 }

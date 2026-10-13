@@ -2,6 +2,7 @@
 
 import {
 	useEffect,
+	useLayoutEffect,
 	useRef,
 	useState,
 	type ChangeEvent,
@@ -13,11 +14,14 @@ import {PiBowlFoodDuotone, PiMagnifyingGlass, PiTrash} from 'react-icons/pi'
 import {easeOut, fade} from '@/lib/motion'
 import {sanitizeSearchQuery} from '@/lib/sanitizeSearchQuery'
 
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
+
 type FoodSearchInputProps = {
 	onSearch: (query: string) => void
 	onClear: () => void
 	isSearching: boolean
 	hasResults: boolean
+	submittedQuery: string
 }
 
 function highlightMatch(suggestion: string, query: string) {
@@ -43,7 +47,8 @@ export default function FoodSearchInput({
 	onSearch,
 	onClear,
 	isSearching,
-	hasResults
+	hasResults,
+	submittedQuery
 }: FoodSearchInputProps) {
 	const [query, setQuery] = useState('')
 	const [suggestions, setSuggestions] = useState<string[]>([])
@@ -51,9 +56,19 @@ export default function FoodSearchInput({
 	const [activeIndex, setActiveIndex] = useState(-1)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const ignoreQueryChange = useRef(false)
+	const queryRef = useRef(query)
+	const hasEditedQuery = useRef(false)
+	queryRef.current = query
 	const canSearch = query.trim().length > 0 && !isSearching
 	const canClear = query.length > 0 || hasResults || isSearching
 	const suggestionsOpen = isOpen && suggestions.length > 0
+
+	useIsomorphicLayoutEffect(() => {
+		if (hasEditedQuery.current || queryRef.current === submittedQuery) return
+
+		ignoreQueryChange.current = true
+		setQuery(submittedQuery)
+	}, [submittedQuery])
 
 	useEffect(() => {
 		if (ignoreQueryChange.current) {
@@ -115,6 +130,7 @@ export default function FoodSearchInput({
 	}, [suggestionsOpen])
 
 	function handleChange(event: ChangeEvent<HTMLInputElement>) {
+		hasEditedQuery.current = true
 		setQuery(sanitizeSearchQuery(event.target.value))
 	}
 

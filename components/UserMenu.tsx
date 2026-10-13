@@ -1,6 +1,7 @@
 'use client'
 
 import {AnimatePresence, motion} from 'framer-motion'
+import Link from 'next/link'
 import {useEffect, useRef, useState} from 'react'
 import {PiUser} from 'react-icons/pi'
 import ThemeControl from '@/components/ThemeControl'
@@ -58,6 +59,15 @@ export default function UserMenu() {
 							Theme
 						</p>
 						<ThemeControl />
+						<div className="mt-3 border-t border-stone-200 pt-3 dark:border-stone-800">
+							<Link
+								href="/sign-in"
+								onClick={() => setOpen(false)}
+								className="flex h-9 items-center justify-center rounded-lg bg-emerald-700 px-3 text-sm font-semibold text-white hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+							>
+								Sign in
+							</Link>
+						</div>
 					</motion.div>
 				) : null}
 			</AnimatePresence>
